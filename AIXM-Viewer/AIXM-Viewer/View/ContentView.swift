@@ -46,10 +46,10 @@ private struct FilePickerButton: View {
 // MARK: - рабочее окно
 struct ContentView: View {
     @StateObject private var parser = AIXM_Parser()
-    @State private var region = MKCoordinateRegion(
+    @State private var map_region: MapCameraPosition = .region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
         span: Constants.defaultSpan
-    )
+    ))
     @State private var showingFilePicker = false
 
     var body: some View {
@@ -80,33 +80,37 @@ struct ContentView: View {
             Text(parser.alertMessage)
         }
     }
-    
-    private var mapView: some View {
-        ZStack(alignment: .top) {
-            Map(
-                coordinateRegion: $region,
-                annotationItems: parser.dots
-            ) { airport in
-                MapAnnotation(coordinate: airport.coordinate) {
+
+    private var mapContent: some View {
+        Map(position: $map_region) {
+            ForEach(parser.dots) { airport in
+                Annotation(airport.id.uuidString, coordinate: airport.coordinate) {
                     AirportMarker()
                 }
             }
-            .edgesIgnoringSafeArea(.all)
-            .onChange(of: parser.dots, initial: false) { _, newDots in
-                centerMapOnFirstAirport(newDots)
-            }
+        }
+        .mapStyle(.standard)
+        .edgesIgnoringSafeArea(.all)
+        .onChange(of: parser.dots) { oldValue, newValue in
+            centerMapOnFirstAirport(newValue)
+        }
+    }
+
+    private var mapView: some View {
+        ZStack(alignment: .top) {
+            mapContent
         }
         .frame(maxHeight: .infinity)
         .background(Color.white)
         .cornerRadius(Constants.mapCornerRadius)
     }
-
+    
     private func centerMapOnFirstAirport(_ airports: [AirportHeliport]) {
         if let firstAirport = airports.first {
-            region = MKCoordinateRegion(
+            map_region = .region(MKCoordinateRegion(
                 center: firstAirport.coordinate,
                 span: Constants.zoomSpan
-            )
+            ))
         }
     }
     
