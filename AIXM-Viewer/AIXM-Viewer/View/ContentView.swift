@@ -89,7 +89,7 @@ struct ContentView: View {
                 }
             }
         }
-        .mapStyle(.standard)
+        .mapStyle(.imagery)
         .edgesIgnoringSafeArea(.all)
         .onChange(of: parser.dots) { oldValue, newValue in
             centerMapOnFirstAirport(newValue)

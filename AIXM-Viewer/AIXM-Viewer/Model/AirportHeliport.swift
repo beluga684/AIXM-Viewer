@@ -9,3 +9,12 @@ struct AirportHeliport: Identifiable, Equatable {
         lhs.id == rhs.id
     }
 }
+
+struct VOR: Identifiable, Equatable {
+    let id = UUID()
+    let coordinate: CLLocationCoordinate2D
+    
+    static func == (lhs: VOR, rhs: VOR) -> Bool {
+        lhs.id == rhs.id
+    }
+}

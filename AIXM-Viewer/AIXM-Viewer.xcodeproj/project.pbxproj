@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6740BE592DBEBF7100E9C468 /* -.md in Resources */ = {isa = PBXBuildFile; fileRef = 6740BE582DBEBF7100E9C468 /* -.md */; };
 		67EF4F3B2DBAC3BA00C5B673 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = 67EF4F3A2DBAC3BA00C5B673 /* MapLibre */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6740BE582DBEBF7100E9C468 /* -.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "-.md"; sourceTree = "<group>"; };
 		67EF4F232DBAC11A00C5B673 /* AIXM-Viewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AIXM-Viewer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -37,6 +39,7 @@
 		67EF4F1A2DBAC11A00C5B673 = {
 			isa = PBXGroup;
 			children = (
+				6740BE582DBEBF7100E9C468 /* -.md */,
 				67EF4F252DBAC11A00C5B673 /* AIXM-Viewer */,
 				67EF4F242DBAC11A00C5B673 /* Products */,
 			);
@@ -118,6 +121,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6740BE592DBEBF7100E9C468 /* -.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
