@@ -2,48 +2,6 @@ import SwiftUI
 import MapKit
 import UniformTypeIdentifiers
 
-// MARK: - константы
-private enum Constants {
-    static let mapCornerRadius: CGFloat = 20
-    static let markerSize: CGFloat = 8
-    static let markerStrokeWidth: CGFloat = 1
-    static let defaultSpan = MKCoordinateSpan(
-        latitudeDelta: 180.0, longitudeDelta: 180.0
-    )
-    static let zoomSpan = MKCoordinateSpan(
-        latitudeDelta: 1.0, longitudeDelta: 1.0
-    )
-}
-
-// MARK: - маркер аэропорта
-private struct AirportMarker: View {
-    var body: some View {
-        Circle()
-            .fill(Color.blue)
-            .frame(width: Constants.markerSize, height: Constants.markerSize)
-            .overlay(
-                Circle()
-                    .stroke(Color.white, lineWidth: Constants.markerStrokeWidth)
-            )
-    }
-}
-
-// MARK: - кнопка выбора файла
-private struct FilePickerButton: View {
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: "doc.fill")
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-        }
-    }
-}
-
-// MARK: - рабочее окно
 struct ContentView: View {
     @StateObject private var parser = AIXM_Parser()
     @State private var map_region: MapCameraPosition = .region(MKCoordinateRegion(

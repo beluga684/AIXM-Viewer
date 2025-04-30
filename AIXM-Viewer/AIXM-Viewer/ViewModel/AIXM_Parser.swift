@@ -1,24 +1,17 @@
 import SwiftUI
 import MapKit
 
-/// Парсер для XML файлов в формате AIXM
 class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
-    // MARK: - Published Properties
     @Published var dots: [AirportHeliport] = []
-    @Published var showAlert = false
-    @Published var alertMessage = ""
+//    @Published var showAlert = false
+//    @Published var alertMessage = ""
     @Published var currentFileName = "Файл не выбран"
     
-    // MARK: - Private Properties
     private var currentTag = ""
     private var currentLat: Double?
     private var currentLon: Double?
     private var inARP = false
     
-    // MARK: - Public Methods
-    
-    /// Парсит XML файл и извлекает координаты аэропортов
-    /// - Parameter fileURL: URL выбранного XML файла
     func parse(fileURL: URL) {
         dots.removeAll()
         currentFileName = fileURL.lastPathComponent
@@ -44,8 +37,6 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
             showError("Ошибка при парсинге XML: \(parser.parserError?.localizedDescription ?? "Неизвестная ошибка")")
         }
     }
-    
-    // MARK: - XMLParserDelegate Methods
     
     func parser(_ parser: XMLParser, didStartElement elementName: String,
                 namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
@@ -74,8 +65,6 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
         }
     }
     
-    // MARK: - Private Methods
-    
     private func parseCoordinates(from string: String) {
         let coords = string.split(separator: " ")
         if coords.count == 2,
@@ -101,12 +90,12 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
     }
     
     private func showError(_ message: String) {
-        alertMessage = message
-        showAlert = true
+//        alertMessage = message
+//        showAlert = true
     }
     
     private func showSuccess() {
-        alertMessage = "Все окей"
-        showAlert = true
+//        alertMessage = "Все окей"
+//        showAlert = true
     }
 }
