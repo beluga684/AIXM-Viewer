@@ -2,15 +2,17 @@ import SwiftUI
 import MapKit
 
 class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
-    @Published var dots: [AirportHeliport] = []
-//    @Published var showAlert = false
-//    @Published var alertMessage = ""
+    @Published var dots: [MapItem] = []
+    @Published var showAlert = false
+    @Published var alertMessage = ""
     @Published var currentFileName = "Файл не выбран"
     
     private var currentTag = ""
     private var currentLat: Double?
     private var currentLon: Double?
     private var inARP = false
+    private var inVORLocation = false
+    private var currentType: MapItemType?
     
     func parse(fileURL: URL) {
         dots.removeAll()
@@ -34,15 +36,28 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
         if parser.parse() {
             showSuccess()
         } else {
-            showError("Ошибка при парсинге XML: \(parser.parserError?.localizedDescription ?? "Неизвестная ошибка")")
+            showError(
+                "Ошибка при парсинге XML: \(parser.parserError?.localizedDescription ?? "Неизвестная ошибка")"
+            )
         }
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String,
                 namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentTag = elementName
+        
+        if elementName.contains("AirportHeliport") {
+            currentType = .airport
+        } else if elementName.contains("VOR") {
+            currentType = .vor
+        }
+        
         if elementName.contains("ARP") {
             inARP = true
+        }
+        
+        if elementName.contains("location") && currentType == .vor {
+            inVORLocation = true
         }
     }
     
@@ -50,7 +65,11 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
         let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        if inARP && currentTag.contains("pos") {
+        //        if inARP && currentTag.contains("pos") {
+        //            parseCoordinates(from: trimmed)
+        //        }
+        
+        if (inARP || inVORLocation), currentTag.contains("pos") {
             parseCoordinates(from: trimmed)
         }
     }
@@ -60,7 +79,17 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
         if elementName.contains("ARP") {
             inARP = false
         }
-        if elementName.contains("AirportHeliportTimeSlice") {
+        if elementName.contains("location") && currentType == .vor {
+            inVORLocation = false
+        }
+        
+        //        if elementName.contains("AirportHeliportTimeSlice") {
+        //            addAirportIfValid()
+        //        }
+        
+        if elementName
+            .contains("AirportHeliportTimeSlice") || elementName
+            .contains("VORTimeSlice") {
             addAirportIfValid()
         }
     }
@@ -76,26 +105,36 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
     }
     
     private func addAirportIfValid() {
-        if let lat = currentLat, let lon = currentLon {
-            let airport = AirportHeliport(
+        //        if let lat = currentLat, let lon = currentLon {
+        //            let airport = AirportHeliport(
+        //                coordinate: CLLocationCoordinate2D(
+        //                    latitude: lat,
+        //                    longitude: lon
+        //                )
+        //            )
+        //            dots.append(airport)
+        //        }
+        if let lat = currentLat, let lon = currentLon, let type = currentType {
+            let item = MapItem(
                 coordinate: CLLocationCoordinate2D(
                     latitude: lat,
                     longitude: lon
-                )
+                ),
+                type: type
             )
-            dots.append(airport)
+            dots.append(item)
         }
         currentLat = nil
         currentLon = nil
     }
     
     private func showError(_ message: String) {
-//        alertMessage = message
-//        showAlert = true
+        alertMessage = message
+        showAlert = true
     }
     
     private func showSuccess() {
-//        alertMessage = "Все окей"
-//        showAlert = true
+        alertMessage = "Все окей"
+        showAlert = true
     }
 }

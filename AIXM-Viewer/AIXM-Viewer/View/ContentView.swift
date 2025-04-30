@@ -41,9 +41,13 @@ struct ContentView: View {
 
     private var mapContent: some View {
         Map(position: $map_region) {
-            ForEach(parser.dots) { airport in
-                Annotation(airport.id.uuidString, coordinate: airport.coordinate) {
-                    AirportMarker()
+            ForEach(parser.dots) { object in
+                Annotation(object.id.uuidString, coordinate: object.coordinate) {
+                    if object.type == .airport {
+                        AirportMarker()
+                    } else {
+                        VorMarker()
+                    }
                 }
             }
         }
@@ -63,7 +67,7 @@ struct ContentView: View {
         .cornerRadius(Constants.mapCornerRadius)
     }
     
-    private func centerMapOnFirstAirport(_ airports: [AirportHeliport]) {
+    private func centerMapOnFirstAirport(_ airports: [MapItem]) {
         if let firstAirport = airports.first {
             map_region = .region(MKCoordinateRegion(
                 center: firstAirport.coordinate,
