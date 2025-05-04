@@ -54,6 +54,16 @@ struct ContentView: View {
                     }
                 }
             }
+            
+            ForEach(parser.groupedRunways) { runway in
+                MapPolyline(
+                    coordinates: [
+                        runway.startPoint.coordinate,
+                        runway.endPoint.coordinate
+                    ]
+                )
+                .stroke(.purple, lineWidth: 5)
+            }
         }
         .mapStyle(.imagery)
         .edgesIgnoringSafeArea(.all)

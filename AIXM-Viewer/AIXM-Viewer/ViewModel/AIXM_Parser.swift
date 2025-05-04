@@ -69,7 +69,8 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
         let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         
-        if (inARP || inVORLocation || inRunawayLocation), currentTag.contains("pos") {
+        if (inARP || inVORLocation || inRunawayLocation), currentTag
+            .contains("pos") {
             parseCoordinates(from: trimmed)
         }
     }
@@ -124,5 +125,20 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
     private func showSuccess() {
         alertMessage = "Все окей"
         showAlert = true
+    }
+
+    var groupedRunways: [Runway] {
+        let runwayDots = dots.filter { $0.type == .runway }
+        var runways: [Runway] = []
+        for i in stride(from: 0, to: runwayDots.count, by: 2) {
+            guard i + 1 < runwayDots.count else { break }
+            let runway = Runway(
+                id: UUID().uuidString,
+                startPoint: runwayDots[i],
+                endPoint: runwayDots[i + 1]
+            )
+            runways.append(runway)
+        }
+        return runways
     }
 }

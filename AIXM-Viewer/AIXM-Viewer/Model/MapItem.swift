@@ -15,3 +15,9 @@ struct MapItem: Identifiable, Equatable {
         lhs.id == rhs.id
     }
 }
+
+struct Runway: Identifiable {
+    let id: String
+    let startPoint: MapItem
+    let endPoint: MapItem
+}

@@ -2,18 +2,29 @@ import SwiftUI
 
 struct AirportMarker: View {
     var body: some View {
-        Image(systemName: "airplane.circle.fill")
-            .foregroundColor(.blue)
-            .frame(width: Constants.markerSize, height: Constants.markerSize)
+        ZStack {
+            Circle()
+                .fill(Color.white.opacity(0.7))
+                .frame(width: Constants.markerSize * 1.4, height: Constants.markerSize * 1.4)
+            
+            Image(systemName: "airplane.circle.fill")
+                .foregroundColor(.blue)
+                .frame(width: Constants.markerSize, height: Constants.markerSize)
+        }
     }
 }
 
 struct VorMarker: View {
     var body: some View {
-        Image(systemName: "dot.radiowaves.left.and.right")
-            .foregroundColor(.red)
-            .frame(width: Constants.markerSize, height: Constants.markerSize)
-        
+        ZStack {
+            Circle()
+                .fill(Color.white.opacity(0.7))
+                .frame(width: Constants.markerSize * 1.4, height: Constants.markerSize * 1.4)
+            
+            Image(systemName: "wifi.circle.fill")
+                .foregroundColor(.red)
+                .frame(width: Constants.markerSize, height: Constants.markerSize)
+        }
     }
 }
 
