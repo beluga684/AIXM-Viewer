@@ -3,6 +3,7 @@ import MapKit
 enum MapItemType {
     case airport
     case vor
+    case runway
 }
 
 struct MapItem: Identifiable, Equatable {

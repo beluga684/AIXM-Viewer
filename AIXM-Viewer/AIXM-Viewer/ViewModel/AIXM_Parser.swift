@@ -1,4 +1,3 @@
-import SwiftUI
 import MapKit
 
 class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
@@ -10,8 +9,11 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
     private var currentTag = ""
     private var currentLat: Double?
     private var currentLon: Double?
+    
     private var inARP = false
     private var inVORLocation = false
+    private var inRunawayLocation = false
+    
     private var currentType: MapItemType?
     
     func parse(fileURL: URL) {
@@ -50,47 +52,42 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
             currentType = .airport
         } else if elementName.contains("VOR") {
             currentType = .vor
+        } else if elementName.contains("RunwayCentrelinePoint") {
+            currentType = .runway
         }
         
         if elementName.contains("ARP") {
             inARP = true
-        }
-        
-        if elementName.contains("location") && currentType == .vor {
+        } else if elementName.contains("location") && currentType == .vor {
             inVORLocation = true
+        } else if elementName.contains("location") && currentType == .runway {
+            inRunawayLocation = true
         }
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-
-        //        if inARP && currentTag.contains("pos") {
-        //            parseCoordinates(from: trimmed)
-        //        }
         
-        if (inARP || inVORLocation), currentTag.contains("pos") {
+        if (inARP || inVORLocation || inRunawayLocation), currentTag.contains("pos") {
             parseCoordinates(from: trimmed)
         }
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String,
                 namespaceURI: String?, qualifiedName qName: String?) {
-        if elementName.contains("ARP") {
+        if elementName.contains("location") && currentType == .runway {
+            inRunawayLocation = false
+        } else if elementName.contains("ARP") {
             inARP = false
-        }
-        if elementName.contains("location") && currentType == .vor {
+        } else if elementName.contains("location") && currentType == .vor {
             inVORLocation = false
         }
         
-        //        if elementName.contains("AirportHeliportTimeSlice") {
-        //            addAirportIfValid()
-        //        }
-        
-        if elementName
-            .contains("AirportHeliportTimeSlice") || elementName
-            .contains("VORTimeSlice") {
-            addAirportIfValid()
+        if elementName.contains("RunwayCentrelinePointTimeSlice") ||
+            elementName.contains("AirportHeliportTimeSlice") ||
+            elementName.contains("VORTimeSlice"){
+            addDotIfValid()
         }
     }
     
@@ -104,16 +101,7 @@ class AIXM_Parser: NSObject, ObservableObject, XMLParserDelegate {
         }
     }
     
-    private func addAirportIfValid() {
-        //        if let lat = currentLat, let lon = currentLon {
-        //            let airport = AirportHeliport(
-        //                coordinate: CLLocationCoordinate2D(
-        //                    latitude: lat,
-        //                    longitude: lon
-        //                )
-        //            )
-        //            dots.append(airport)
-        //        }
+    private func addDotIfValid() {
         if let lat = currentLat, let lon = currentLon, let type = currentType {
             let item = MapItem(
                 coordinate: CLLocationCoordinate2D(

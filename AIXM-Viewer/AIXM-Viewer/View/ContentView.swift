@@ -1,6 +1,5 @@
 import SwiftUI
 import MapKit
-import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var parser = AIXM_Parser()
@@ -42,11 +41,16 @@ struct ContentView: View {
     private var mapContent: some View {
         Map(position: $map_region) {
             ForEach(parser.dots) { object in
-                Annotation(object.id.uuidString, coordinate: object.coordinate) {
+                Annotation(
+                    object.id.uuidString,
+                    coordinate: object.coordinate
+                ) {
                     if object.type == .airport {
                         AirportMarker()
-                    } else {
+                    } else if object.type == .vor {
                         VorMarker()
+                    } else {
+                        RunwayMarker()
                     }
                 }
             }
