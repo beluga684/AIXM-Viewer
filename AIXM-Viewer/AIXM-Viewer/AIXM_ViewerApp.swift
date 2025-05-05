@@ -1,10 +1,19 @@
 import SwiftUI
 
+/// Главная точка входа приложения AIXM Viewer.
 @main
-struct AIXM_ViewerApp: App {
+struct AIXMViewerApp: App {
+    // MARK: - Scene
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview {
+    ContentView()
 }
