@@ -8,7 +8,7 @@
 
 ## Скриншоты
 
-![Главный экран](screenshots/main_screen.jpg)
+<img src="screenshots/main_screen.jpg" alt="Главный экран" width="35%">
 
 ## Основные возможности
 
