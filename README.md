@@ -4,7 +4,7 @@
 
 ![Swift](https://img.shields.io/badge/Swift-5.10-orange.svg)
 ![iOS](https://img.shields.io/badge/iOS-17.0+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+![License](https://img.shields.io/badge/license-none-lightgrey.svg)
 
 ## Скриншоты
 
@@ -31,7 +31,7 @@
 - `MapKit`
 - `Foundation`
 
-## Структура проекта
+## Структура проекта (подписей не будет, мне лень)
 
 ```
 AIXM-Viewer
